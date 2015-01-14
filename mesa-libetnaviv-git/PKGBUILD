@@ -1,0 +1,63 @@
+buildarch=4
+pkgname='mesa-libetnaviv-git'
+pkgver=
+pkgrel=1
+arch=('armv7h')
+depends=('libdrm' 'systemd' 'expat' 'wayland' 'llvm-libs' 'elfutils')
+makedepends=('python2' 'libxml2' 'glproto' 'libdrm' 'dri2proto' 
+             'dri3proto' 'presentproto' 'wayland' 'elfutils' 'systemd'
+             'libetnaviv' 'libva' 'llvm' 'clang')
+url="http://mesa3d.sourceforge.net"
+license=('custom')
+options=('!libtool')
+provides=('mesa' 'libglapi' 'osmesa' 'libgbm' 'libgles' 'libegl' 'khrplatform-devel')
+conflicts=('mesa' 'mesa-dri' 'libglapi' 'osmesa' 'libgbm' 'libgles' 'libegl' 'khrplatform-devel')
+source=("mesa::git+https://github.com/etnaviv/mesa.git")
+sha256sums=(SKIP)
+
+pkgver() {
+  cd "${srcdir}/mesa"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare(){
+  cd "${srcdir}/mesa"
+}
+
+build() {
+  # Build mesa
+  cd "${srcdir}/mesa"
+
+  export ETNA_LIBS="-letnaviv"
+
+  autoreconf -vfi # our automake is far too new for their build system :)
+
+  ./configure --prefix=/usr \
+    --sysconfdir=/etc \
+    --enable-gles2 \
+    --enable-gles1 \
+    --disable-glx \
+    --enable-egl \
+    --enable-dri \
+    --with-gallium-drivers=swrast,etna \
+    --with-egl-platforms=fbdev \
+    --enable-gallium-egl \
+    --with-dri-drivers= \
+#    --enable-texture-float \
+#    --enable-nine \
+#    --with-clang-libdir=/usr/lib \
+#    --enable-gbm \
+#    --enable-gallium-llvm \
+#    --enable-shared-glapi \
+#    --enable-llvm-shared-libs \
+#    --enable-osmesa \
+
+  make
+}
+
+package() {
+  cd "$srcdir/mesa"
+  # Running make install
+  make DESTDIR="${pkgdir}" install
+}
+

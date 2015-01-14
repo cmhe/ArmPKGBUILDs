@@ -1,0 +1,86 @@
+From 3c83a978f512ab287a63fc047061c58f1f62f50c Mon Sep 17 00:00:00 2001
+From: Claudius Heine <ch@denx.de>
+Date: Mon, 12 Jan 2015 13:44:37 +0100
+Subject: [PATCH 1/2] Dirty Touchscreen Hack
+
+---
+ xbmc/input/linux/LinuxInputDevices.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/xbmc/input/linux/LinuxInputDevices.cpp b/xbmc/input/linux/LinuxInputDevices.cpp
+index 0b0f7ae..e9bf9cb 100644
+--- a/xbmc/input/linux/LinuxInputDevices.cpp
++++ b/xbmc/input/linux/LinuxInputDevices.cpp
+@@ -603,11 +603,11 @@ bool CLinuxInputDevice::AbsEvent(const struct input_event& levt, XBMC_Event& dev
+   switch (levt.code)
+   {
+   case ABS_X:
+-    m_mouseX = levt.value;
++    m_mouseX = (levt.value * 1920) / 32768;
+     break;
+ 
+   case ABS_Y:
+-    m_mouseY = levt.value;
++    m_mouseY = (levt.value * 1080) / 32768;
+     break;
+   
+   case ABS_MISC:
+-- 
+2.1.0
+
+
+From 0cbe298766661017ba7cadb7737709be192ff701 Mon Sep 17 00:00:00 2001
+From: Claudius Heine <ch@denx.de>
+Date: Mon, 12 Jan 2015 15:32:37 +0100
+Subject: [PATCH 2/2] expanded on the dirty patch
+
+---
+ xbmc/input/linux/LinuxInputDevices.cpp | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/xbmc/input/linux/LinuxInputDevices.cpp b/xbmc/input/linux/LinuxInputDevices.cpp
+index e9bf9cb..6afe0c0 100644
+--- a/xbmc/input/linux/LinuxInputDevices.cpp
++++ b/xbmc/input/linux/LinuxInputDevices.cpp
+@@ -275,6 +275,8 @@ typedef enum
+ 
+ static char remoteStatus = 0xFF; // paired, battery OK
+ 
++static char touchclick = 0;
++
+ CLinuxInputDevice::CLinuxInputDevice(const std::string fileName, int index)
+ {
+   m_fd = -1;
+@@ -496,6 +498,11 @@ bool CLinuxInputDevice::KeyEvent(const struct input_event& levt, XBMC_Event& dev
+ 
+       case BTN_TOUCH:
+         devt.button.button = XBMC_BUTTON_LEFT;
++
++        /* Ignore touch and trigger it when both coordinates are received */
++        touchclick = levt.value;
++        if (levt.value) return false;
++
+         break;
+ 
+       case BTN_TOOL_DOUBLETAP:
+@@ -628,6 +635,17 @@ bool CLinuxInputDevice::AbsEvent(const struct input_event& levt, XBMC_Event& dev
+   devt.motion.yrel = 0;
+   devt.motion.which = m_deviceIndex;
+ 
++  if (touchclick && levt.code == ABS_Y) {
++	touchclick = 0;
++    devt.type = XBMC_MOUSEBUTTONDOWN;
++    devt.button.type = devt.type;
++    devt.button.which = m_deviceIndex;
++    devt.button.button = XBMC_BUTTON_LEFT;
++    devt.button.state = XBMC_PRESSED;
++    devt.button.x = m_mouseX;
++    devt.button.y = m_mouseY;
++  }
++
+   return true;
+ }
+ 
+-- 
+2.1.0
+

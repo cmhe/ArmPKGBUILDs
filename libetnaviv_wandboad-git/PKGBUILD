@@ -1,0 +1,48 @@
+pkgname=libetnaviv-git
+pkgver=
+pkgrel=1
+pkgdesc="An open source user-space driver for the Vivante GCxxx series of embedded GPUs."
+arch=('armv7h')
+buildarch=4
+url="https://github.com/etnaviv/etna_viv"
+license=('GPL' 'custom')
+depends=()
+makedepends=('git')
+optdepends=()
+provides=('libetnaviv')
+conflicts=()
+replaces=()
+install=
+source=("etna_viv::git+https://github.com/etnaviv/etna_viv.git"
+        "0001-etna_viv-wandboard.patch")
+
+sha256sums=('SKIP'
+            'b75f086840abd53c8f698f3a94998fd6730fefeb0446768899c35e7078104700')
+
+pkgver() {
+  cd "${srcdir}/etna_viv"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "${srcdir}/etna_viv"
+  
+  git apply "../0001-etna_viv-wandboard.patch"
+}
+
+build() {
+  cd "${srcdir}/etna_viv/src/etnaviv"
+  export GCABI="imx6_v4_1_0_wandboard"
+  make
+}
+
+package() {
+  install -m755 -d "${pkgdir}/usr/lib"
+  install -m644 "${srcdir}/etna_viv/src/etnaviv/libetnaviv.a" "${pkgdir}/usr/lib"
+  
+  install -m755 -d "${pkgdir}/usr/include/etnaviv"
+  cd "${srcdir}/etna_viv/src/etnaviv/"
+  for header in *.h; do
+    install -m644 "${header}" "${pkgdir}/usr/include/etnaviv"
+  done
+}
