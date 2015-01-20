@@ -3,10 +3,9 @@ pkgname='mesa-libetnaviv-git'
 pkgver=
 pkgrel=1
 arch=('armv7h')
-depends=('libdrm' 'systemd' 'expat' 'wayland' 'llvm-libs' 'elfutils')
+depends=('libdrm' 'systemd' 'expat' 'elfutils')
 makedepends=('python2' 'libxml2' 'glproto' 'libdrm' 'dri2proto' 
-             'dri3proto' 'presentproto' 'wayland' 'elfutils' 'systemd'
-             'libetnaviv' 'libva' 'llvm' 'clang')
+             'dri3proto' 'presentproto' 'elfutils' 'systemd' 'libetnaviv')
 url="http://mesa3d.sourceforge.net"
 license=('custom')
 options=('!libtool')
