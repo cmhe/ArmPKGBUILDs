@@ -92,7 +92,7 @@ package_mesa-etna-git() {
   mv -v ${srcdir}/fakeinstall/usr/include ${pkgdir}/usr
 
   install -m755 -d ${pkgdir}/usr/lib/pkgconfig
-  mv -v ${srcdir}/fakeinstall/usr/lib/pkgconfig/{osmesa,gbm,dri,egl,gl,wayland-egl,glesv1_cm.pc,glesv2.pc}.pc ${pkgdir}/usr/lib/pkgconfig
+  mv -v ${srcdir}/fakeinstall/usr/lib/pkgconfig/{osmesa,gbm,dri,egl,gl,wayland-egl,glesv1_cm,glesv2}.pc ${pkgdir}/usr/lib/pkgconfig
   
   install -m755 -d ${pkgdir}/usr/lib/mesa
   # move libgl/EGL/glesv*.so to not conflict with blobs - may break .pc files ?
