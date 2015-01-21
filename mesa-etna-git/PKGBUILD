@@ -73,9 +73,9 @@ package_mesa-etna-git() {
               'mesa-vdpau: for accelerated video playback'
               'libva-mesa-driver: for accelerated video playback')
   provides=('libglapi' 'osmesa' 'libgbm' 'libgles' 'libegl' 'khrplatform-devel'
-            'ati-dri' 'intel-dri' 'nouveau-dri' 'svga-dri' 'mesa-dri')
+            'ati-dri' 'intel-dri' 'nouveau-dri' 'svga-dri' 'mesa-dri' 'mesa')
   conflicts=('libglapi' 'osmesa' 'libgbm' 'libgles' 'libegl' 'khrplatform-devel'
-             'ati-dri' 'intel-dri' 'nouveau-dri' 'svga-dri' 'mesa-dri')
+             'ati-dri' 'intel-dri' 'nouveau-dri' 'svga-dri' 'mesa-dri' 'mesa')
   replaces=('libglapi' 'osmesa' 'libgbm' 'libgles' 'libegl' 'khrplatform-devel'
             'ati-dri' 'intel-dri' 'nouveau-dri' 'svga-dri' 'mesa-dri')
 
