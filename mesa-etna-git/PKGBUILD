@@ -10,7 +10,7 @@
 buildarch=4
 
 pkgbase=mesa-etna-git
-pkgname=('mesa-etna-git' 'mesa-etna-libgl-git' 'libva-mesa-etna-driver-git')
+pkgname=('mesa-etna-git' 'mesa-etna-libgl-git')
 pkgver=
 pkgrel=1
 arch=('armv7h')
@@ -55,7 +55,6 @@ build() {
     --enable-gles2 \
     --enable-texture-float \
     --enable-omx \
-    --enable-nine \
     --with-clang-libdir=/usr/lib
     # --help
 
@@ -64,17 +63,6 @@ build() {
   # fake installation
   mkdir $srcdir/fakeinstall
   make DESTDIR=${srcdir}/fakeinstall install
-}
-
-package_libva-mesa-etna-driver-git() {
-  pkgdesc="VA-API implementation for gallium"
-  depends=('libdrm' 'libx11' 'llvm-libs' 'expat' 'elfutils')
-
-  install -m755 -d ${pkgdir}/usr/lib
-  mv -v ${srcdir}/fakeinstall/usr/lib/dri ${pkgdir}/usr/lib
-   
-  install -m755 -d "${pkgdir}/usr/share/licenses/libva-mesa-driver"
-  install -m644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/libva-mesa-driver/"
 }
                
 package_mesa-etna-git() {
@@ -99,7 +87,6 @@ package_mesa-etna-git() {
   mv -v ${srcdir}/fakeinstall/usr/lib/xorg/modules/dri/* ${pkgdir}/usr/lib/xorg/modules/dri
 
   mv -v ${srcdir}/fakeinstall/usr/lib/bellagio  ${pkgdir}/usr/lib
-  mv -v ${srcdir}/fakeinstall/usr/lib/d3d  ${pkgdir}/usr/lib
   mv -v ${srcdir}/fakeinstall/usr/lib/*.so* ${pkgdir}/usr/lib/
 
   mv -v ${srcdir}/fakeinstall/usr/include ${pkgdir}/usr
