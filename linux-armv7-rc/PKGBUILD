@@ -1,8 +1,8 @@
 buildarch=4
 
 _rcver=3.19.0
-_rcrel=4
-_rcnrel=armv7-x2
+_rcrel=5
+_rcnrel=armv7-x3
 
 pkgbase=linux-armv7-rc
 _srcname=linux-3.$((${_rcver##*.}-1))
@@ -23,11 +23,11 @@ source=("${_rcver}-rc${_rcrel}-${_rcnrel}.zImage"
 noextract=("${_rcver}-rc${_rcrel}-${_rcnrel}-dtbs.tar.gz"
            "${_rcver}-rc${_rcrel}-${_rcnrel}-firmware.tar.gz"
            "${_rcver}-rc${_rcrel}-${_rcnrel}-modules.tar.gz")
-md5sums=('8b5540eb7ff60732c3d47d8da5d10359'
-         '0042803042be04d884bace01ca17f07c'
-         'cfc2caa8f15299170fb7b8824c2786e5'
-         'a2f0f0500ecf1e5a6c84e4fce3e2b2aa'
-         '622189d12d05d2c6ccba4b1bc4519ccf')
+md5sums=('c2bf57d84365f9d3245e8e5e34020fe0'
+         'ec2092a757d8b4971ffab8ef38cf1c61'
+         'e8845288ee598d29f29f5d552197e01a'
+         '8e9fa9dbcce175f1ea6ba1a86b6ee1f4'
+         '76209736ddc0bce1293802c9f85159de')
 
 _package() {
   pkgdesc="The Linux Kernel and modules - ${_desc}"
