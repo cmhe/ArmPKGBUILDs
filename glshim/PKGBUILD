@@ -1,0 +1,41 @@
+pkgname='glshim-git'
+pkgver=
+pkgrel=1
+arch=('arm' 'armv7h')
+depends=('libgles' 'libx11')
+makedepends=('cmake')
+url="https://github.com/lunixbochs/glshim"
+license=('custom')
+provides=('libgl')
+options=()
+source=("glshim::git+https://github.com/lunixbochs/glshim.git"
+        "glshim-vars.sh")
+sha256sums=(SKIP
+            '46e8f6e55d2f0f76c29639c6910432dec2cc5c94b6fd54702b46fbdb62dbf718')
+backup=("etc/profile.d/glshim-vars.sh")
+
+pkgver() {
+  cd "${srcdir}/glshim"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare(){
+  cd "${srcdir}/glshim"
+}
+
+build() {
+  # Build mesa
+  cd "${srcdir}/glshim"
+
+  cmake .
+
+  make GL
+}
+
+package() {  
+  install -m755 -d ${pkgdir}/usr
+  mv -v ${srcdir}/glshim/lib ${pkgdir}/usr
+  install -m755 -d ${pkgdir}/etc/profile.d
+  install -m755 ${srcdir}/glshim-vars.sh ${pkgdir}/etc/profile.d
+}
+
